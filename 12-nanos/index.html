@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="12 Tata Nanos in ApniClass colours, one for each month, driving nose to tail through Bengaluru. A live 3D simulation.">
+<meta name="description" content="12 Tata Nanos in ApniClass colours drive past the IB and Cambridge schools of East Bengaluru. Beat each Nano's exam question and collect all 12 stamps.">
 <meta property="og:title" content="ApniClass 12 Nanos">
-<meta property="og:description" content="12 Nanos. 12 Months. One city. Honk, film it, get stuck at Silk Board.">
+<meta property="og:description" content="12 Nanos. 12 Months. 12 exam questions. Can you collect all 12 stamps?">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>ApniClass 12 Nanos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -144,6 +144,44 @@ button{cursor:pointer}
 #plan .out .n{font:600 19px var(--mono);color:var(--yellow);font-variant-numeric:tabular-nums}
 #plan .out .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 #plan .note{font-size:12px;color:var(--dim);margin-top:10px;line-height:1.45}
+/* school hook, quiz, passport */
+#hook{left:calc(12px + env(safe-area-inset-left,0px));bottom:calc(286px + env(safe-area-inset-bottom,0px));width:310px;padding:12px 14px;z-index:7;border-color:rgba(255,225,74,.5)}
+#hook .eb{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+#hook h4{margin:2px 0 4px;font-size:19px;line-height:1.15;text-wrap:balance}
+.bds{display:flex;gap:4px;flex-wrap:wrap;margin:2px 0 6px}
+.bdg{font:700 11px var(--ui);padding:0 7px;border-radius:999px;border:1px solid currentColor;line-height:18px}
+.bdg.ib{color:var(--cyan)} .bdg.cam{color:var(--orange)}
+#hook p{margin:0 0 9px;font-size:14px;line-height:1.42}
+#hook .row{display:flex;gap:6px;flex-wrap:wrap}
+a.act{text-decoration:none}
+.fine{font-size:11px;color:var(--dim);margin-top:7px;line-height:1.35}
+#hook .x{position:absolute;top:6px;right:8px;background:transparent;border:0;color:var(--dim);font-size:18px}
+.pass{display:flex;align-items:center;gap:6px;border-left:1px solid var(--line);padding-left:10px}
+.pass .dots{display:grid;grid-template-columns:repeat(6,9px);gap:2px}
+.pass .dots i{width:9px;height:9px;border-radius:2px;border:1px solid rgba(242,240,232,.25)}
+.pass .n{font:600 12px var(--mono);color:var(--dim);font-variant-numeric:tabular-nums}
+#cQuiz{margin-top:10px}
+#qQ{margin:4px 0 8px!important;font-weight:600}
+.opts{display:grid;gap:5px}
+.opts button{text-align:left;background:rgba(0,0,0,.28);border:1px solid var(--line);color:var(--chalk);border-radius:8px;padding:7px 10px;font:600 14px var(--ui)}
+.opts button:hover:not(:disabled){border-color:var(--yellow)}
+.opts button:disabled{cursor:default}
+.opts button.ok{border-color:#5fd36a;background:rgba(95,211,106,.16)}
+.opts button.no{border-color:var(--pen);background:rgba(232,50,47,.16)}
+#qRes{margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.3);font-size:13px;line-height:1.45}
+#qRes .ms{display:block;margin-top:4px;color:#ff8f8c}
+#qRes button{margin-top:6px}
+#card{max-height:calc(100vh - 170px);overflow:auto}
+#card details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+#card summary{cursor:pointer;font-size:13px;color:var(--dim)}
+#selSchool{background:rgba(0,0,0,.25);color:var(--chalk);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:700 13px var(--ui);flex:none;max-width:160px}
+.cf{position:fixed;top:-14px;width:8px;height:13px;z-index:40;pointer-events:none;animation:fall 2.6s cubic-bezier(.3,.6,.6,1) forwards}
+@keyframes fall{to{transform:translate(var(--dx),108vh) rotate(var(--r))}}
+#year .big{font:600 44px var(--mono);color:var(--yellow)}
+@media (max-width:760px){
+  #hook{left:12px;right:12px;width:auto;bottom:auto;top:calc(104px + env(safe-area-inset-top,0px))}
+  .pass .dots{grid-template-columns:repeat(12,7px)} .pass .dots i{width:7px;height:7px}
+}
 @media (max-width:760px){
   #brand .sub{display:none}
   #brand{padding:6px 9px} #brand .logo{font-size:17px}
@@ -176,7 +214,8 @@ button{cursor:pointer}
 
 <div id="brand" class="hud panel">
   <div class="logo"><span class="a">APNI</span><span class="b">▷</span><span class="c">CLASS</span></div>
-  <div class="sub"><b>12 Nanos · 12 Months</b>One convoy, one city</div>
+  <div class="sub"><b>12 Nanos · 12 Months</b><span id="cdn">One convoy, one city</span></div>
+  <div class="pass" title="Nano Passport: answer each Nano's exam question to collect its stamp"><div class="dots" id="passDots"></div><span class="n" id="passN">0/12</span></div>
 </div>
 
 <div id="place" class="hud panel" aria-live="polite">
@@ -192,12 +231,12 @@ button{cursor:pointer}
     <div><span class="n" id="sPhone">0</span><span class="lbl">Phones</span></div>
     <div><span class="n" id="sReel">0</span><span class="lbl">Reels</span></div>
   </div>
-  <div class="top">Where Bengaluru looked most<ol id="sTop"><li><span>Waiting for the first lap</span><span></span></li></ol></div>
+  <div class="top"><span id="sTopL">Where Bengaluru looked most</span><ol id="sTop"><li><span>Waiting for the first lap</span><span></span></li></ol></div>
 </div>
 
 <div id="mapbox" class="hud panel">
   <canvas id="mini" aria-label="Route map. Click a spot to move the convoy there."></canvas>
-  <div class="cap">Tap the map to send the convoy</div>
+  <div class="cap">Tap to send the convoy · ■ schools</div>
 </div>
 
 <div id="dock" class="hud panel" role="toolbar" aria-label="Simulation controls">
@@ -217,10 +256,12 @@ button{cursor:pointer}
     <button data-time="monsoon" aria-pressed="false">Rain</button>
   </div>
   <span class="sep"></span>
-  <button class="act hot" id="bHonk">Honk all 12</button>
+  <button class="act hot" id="bQuiz">Beat the Nanos</button>
+  <select id="selSchool" aria-label="Drive the convoy to a school"><option value="">Drive to a school…</option></select>
+  <button class="act" id="bHonk">Honk all 12</button>
   <button class="act" id="bJam" aria-pressed="true">Silk Board jam</button>
   <button class="act" id="bSnap">Snap photo</button>
-  <label class="spd" for="speed">Speed <input type="range" id="speed" min="4" max="20" step="1" value="12"><output id="speedOut">43 km/h</output></label>
+  <label class="spd" for="speed" title="Speed"><input type="range" id="speed" min="4" max="20" step="1" value="12"><output id="speedOut">43 km/h</output></label>
   <button class="act" id="bSound" aria-pressed="false">Sound off</button>
   <button class="act" id="bPlan">Run it for real</button>
 </div>
@@ -231,11 +272,19 @@ button{cursor:pointer}
     <div><h3 id="cTitle">August</h3><div class="meta" id="cMeta">Nano 08 of 12</div></div>
     <button class="x" id="cClose" aria-label="Close">×</button>
   </div>
-  <p id="cText"></p>
-  <div class="lab">Repaint this Nano</div>
-  <div class="sw" id="cSw"></div>
-  <div class="lab">Write on its roof sign</div>
-  <input type="text" id="cRoof" maxlength="12" placeholder="e.g. HI WHITEFIELD">
+  <div id="cQuiz">
+    <div class="lab" id="qLab">Beat the Nano</div>
+    <p id="qQ"></p>
+    <div class="opts" id="qOpts"></div>
+    <div id="qRes" hidden></div>
+  </div>
+  <details>
+    <summary>Repaint it or write on its roof sign</summary>
+    <div class="lab">Repaint this Nano</div>
+    <div class="sw" id="cSw"></div>
+    <div class="lab">Write on its roof sign</div>
+    <input type="text" id="cRoof" maxlength="12" placeholder="e.g. HI WHITEFIELD">
+  </details>
   <div class="btns">
     <button class="act hot" id="cFollow">Follow this Nano</button>
     <button class="act" id="cHonk">Honk</button>
@@ -253,20 +302,46 @@ button{cursor:pointer}
   </div>
 </div>
 
+<div id="hook" class="hud panel" hidden aria-live="polite">
+  <button class="x" id="hClose" aria-label="Close">×</button>
+  <div class="eb" id="hEb">School gate</div>
+  <h4 id="hTitle"></h4>
+  <div class="bds" id="hBd"></div>
+  <p id="hText"></p>
+  <div class="row">
+    <a class="act hot" id="hCta" target="_blank" rel="noopener" href="#">Try a free sample paper</a>
+    <button class="act" id="hShare">Share with this school's parents</button>
+  </div>
+  <div class="fine">School shown for its location only. ApniClass is not affiliated with it.</div>
+</div>
+
+<div id="year" class="modal" hidden>
+  <div class="box panel">
+    <h2>A whole year, done.</h2>
+    <div class="big">12 / 12</div>
+    <p class="hint" style="font-size:14px;line-height:1.5">You answered one exam-style question for every month. The ApniClass test series works the same way: one real paper at a time, each one marked, with written feedback on where the marks went.</p>
+    <div class="row">
+      <a class="btn pri" id="yCta" target="_blank" rel="noopener" href="#" style="text-decoration:none">Try a free sample paper</a>
+      <a class="btn sec" id="yWa" target="_blank" rel="noopener" href="#" style="text-decoration:none">Ask on WhatsApp</a>
+      <button class="btn sec" id="yClose">Keep driving</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="panel" style="opacity:0" aria-live="polite"></div>
 
 <div id="intro">
   <div class="card panel">
     <div class="swatchrow" id="introSw"></div>
     <h1><span class="y">12 Nanos.</span><br><span class="o">12 Months.</span><br><span class="c">One city.</span></h1>
-    <p>Twelve Tata Nanos in ApniClass paint, one for each month of the test series, driving nose to tail through Bengaluru. The city around them is simulated live.</p>
+    <p id="introP">Twelve Tata Nanos in ApniClass paint, one for each month, driving nose to tail past the IB and Cambridge schools of East Bengaluru. Every Nano carries one real exam-style question.</p>
     <ul>
-      <li>Tap any Nano to repaint it</li>
+      <li>Beat each Nano's exam question</li>
+      <li>Collect all 12 passport stamps</li>
+      <li>Watch the school gates react</li>
       <li>Honk all 12 at once</li>
-      <li>Get stuck at Silk Board</li>
       <li>Film it like a passer-by</li>
-      <li>Snap a shareable photo</li>
-      <li>Count every head that turns</li>
+      <li>Get stuck at Silk Board</li>
     </ul>
     <div class="go">
       <button class="btn pri" id="goSound">Start with sound</button>
@@ -332,14 +407,52 @@ const COLS=['#4fd8e6','#2fb8c9','#7fe3b8','#c8ec6a','#ffe14a','#ffc93a','#ffab2e
 const COLN=['Class cyan','Deep cyan','Mint','Lime','Chevron yellow','Sunflower','Amber','Apni orange','Coral','Red pen','Chalk white','Chalkboard'];
 const PAPER=['Paper 1. A baseline mock to see where you start.','Paper 2. Find the topics that quietly leak marks.','Paper 3. Units, working and method marks.','Paper 4. First full-length paper against the clock.','Paper 5. A topical deep-dive on the weakest chapter.','Paper 6. The halfway report: what moved, what did not.','Paper 7. Back to timed papers.','Paper 8. Marked the way an examiner marks.','Paper 9. Retest the topics that went wrong.','Paper 10. Full mock under exam rules.','Paper 11. Final polish on the last weak spots.','Paper 12. Walk into the exam having done it all before.'];
 const PLACES=[
- {en:'Whitefield Main Road',sh:'Whitefield',kn:'ವೈಟ್‌ಫೀಲ್ಡ್ ಮುಖ್ಯ ರಸ್ತೆ',p:[330,0]},
- {en:'Marathahalli Bridge',sh:'Marathahalli',kn:'ಮಾರತ್ತಹಳ್ಳಿ ಸೇತುವೆ',p:[200,190]},
- {en:'Silk Board Junction',sh:'Silk Board',kn:'ಸಿಲ್ಕ್ ಬೋರ್ಡ್ ಜಂಕ್ಷನ್',p:[-10,232]},
- {en:'Koramangala 80 Ft Road',sh:'Koramangala',kn:'ಕೋರಮಂಗಲ 80 ಅಡಿ ರಸ್ತೆ',p:[-190,130]},
- {en:'MG Road',sh:'MG Road',kn:'ಮಹಾತ್ಮ ಗಾಂಧಿ ರಸ್ತೆ',p:[-220,-120]},
- {en:'Indiranagar 100 Ft Road',sh:'Indiranagar',kn:'ಇಂದಿರಾನಗರ 100 ಅಡಿ ರಸ್ತೆ',p:[60,-215]},
- {en:'Old Airport Road',sh:'Old Airport Rd',kn:'ಹಳೆ ವಿಮಾನ ನಿಲ್ದಾಣ ರಸ್ತೆ',p:[290,-100]},
+ {k:'wf',en:'Whitefield Main Road',sh:'Whitefield',kn:'ವೈಟ್‌ಫೀಲ್ಡ್ ಮುಖ್ಯ ರಸ್ತೆ',p:[330,0]},
+ {k:'vr',en:'Varthur Road',sh:'Varthur',kn:'ವರ್ತೂರು ರಸ್ತೆ',p:[322,80]},
+ {k:'dm',en:'Dommasandra Circle',sh:'Dommasandra',kn:'ದೊಮ್ಮಸಂದ್ರ ವೃತ್ತ',p:[270,160]},
+ {k:'sj',en:'Sarjapur Road',sh:'Sarjapur Rd',kn:'ಸರ್ಜಾಪುರ ರಸ್ತೆ',p:[170,205]},
+ {k:'bl',en:'Bellandur, Outer Ring Road',sh:'Bellandur',kn:'ಬೆಳ್ಳಂದೂರು ಹೊರ ವರ್ತುಲ ರಸ್ತೆ',p:[70,234]},
+ {k:'sb',en:'Silk Board Junction',sh:'Silk Board',kn:'ಸಿಲ್ಕ್ ಬೋರ್ಡ್ ಜಂಕ್ಷನ್',p:[-60,222]},
+ {k:'km',en:'Koramangala 80 Ft Road',sh:'Koramangala',kn:'ಕೋರಮಂಗಲ 80 ಅಡಿ ರಸ್ತೆ',p:[-190,130]},
+ {k:'mg',en:'MG Road',sh:'MG Road',kn:'ಮಹಾತ್ಮ ಗಾಂಧಿ ರಸ್ತೆ',p:[-235,-90]},
+ {k:'in',en:'Indiranagar 100 Ft Road',sh:'Indiranagar',kn:'ಇಂದಿರಾನಗರ 100 ಅಡಿ ರಸ್ತೆ',p:[-60,-212]},
+ {k:'oa',en:'Old Airport Road',sh:'Old Airport Rd',kn:'ಹಳೆ ವಿಮಾನ ನಿಲ್ದಾಣ ರಸ್ತೆ',p:[110,-205]},
+ {k:'mh',en:'Marathahalli Bridge',sh:'Marathahalli',kn:'ಮಾರತ್ತಹಳ್ಳಿ ಸೇತುವೆ',p:[230,-150]},
 ];
+// IB and Cambridge schools along the loop. Boards are from public school listings (Nov 2026); check before using in paid ads.
+const SCHOOL_DATA=[
+ {slug:'sharanya-narayani',name:'Sharanya Narayani International School',sh:'Sharanya Narayani',area:'Whitefield',b:['IB'],pl:'vr',ds:22},
+ {slug:'giis-whitefield',name:'GIIS Whitefield',sh:'GIIS Whitefield',area:'Gunjur, Whitefield–Sarjapur Road',b:['Cambridge'],pl:'vr',ds:72},
+ {slug:'tisb',name:'The International School Bangalore',sh:'TISB',area:'Dommasandra Circle',b:['IB','Cambridge'],pl:'dm',ds:16},
+ {slug:'inventure',name:'Inventure Academy',sh:'Inventure',area:'Whitefield–Sarjapur Road',b:['Cambridge'],pl:'dm',ds:76},
+ {slug:'indus',name:'Indus International School',sh:'Indus',area:'Sarjapur Road',b:['IB'],pl:'sj',ds:16},
+ {slug:'greenwood-high',name:'Greenwood High International School',sh:'Greenwood High',area:'Sarjapur Road',b:['IB','Cambridge'],pl:'sj',ds:72},
+ {slug:'aurinko',name:'Aurinko Academy',sh:'Aurinko',area:'Kasavanahalli, off Sarjapur Road',b:['Cambridge'],pl:'bl',ds:22},
+ {slug:'vibgyor-marathahalli',name:'VIBGYOR High, Marathahalli',sh:'VIBGYOR Marathahalli',area:'Thubarahalli, Whitefield Road',b:['Cambridge'],pl:'mh',ds:30},
+ {slug:'silver-oaks',name:'Silver Oaks International School',sh:'Silver Oaks',area:'Whitefield',b:['IB'],pl:'mh',ds:88},
+ {slug:'pnc-cognitio',name:'PNC Cognitio School',sh:'PNC Cognitio',area:'Kadugodi, Whitefield',b:['Cambridge'],pl:'mh',ds:150},
+];
+const PUB='https://apniclass-edu.github.io/media/12-nanos/';
+const TS='https://apniclass.com/test-series/?utm_source=12nanos&utm_medium=sim&utm_campaign=12_nanos';
+const WA=t=>'https://wa.me/918306996917?text='+encodeURIComponent(t);
+const QUIZ=[
+ {code:'Physics 0625',q:'A 600 kg Nano speeds up from rest to 12 m/s in 8 s. What resultant force acts on it?',o:['50 N','900 N','4800 N','7200 N'],a:1,ms:'a = Δv ÷ t = 12 ÷ 8 = 1.5 m/s². F = ma = 600 × 1.5 = 900 N. Leave out the unit and the last mark goes.'},
+ {code:'Chemistry 0620',q:'What is the relative formula mass (Mr) of calcium carbonate, CaCO₃? (Ar: Ca = 40, C = 12, O = 16)',o:['68','84','100','116'],a:2,ms:'40 + 12 + (3 × 16) = 100. The usual slip is counting only one oxygen.'},
+ {code:'Biology 0610',q:'Which blood vessel carries oxygenated blood from the lungs to the heart?',o:['Pulmonary vein','Pulmonary artery','Aorta','Vena cava'],a:0,ms:'The pulmonary vein. Veins carry blood to the heart, and this is the one vein that carries oxygenated blood.'},
+ {code:'Maths 0580',q:'Petrol goes from ₹96 to ₹103.20 a litre. What is the percentage increase?',o:['7.2%','6.98%','7.5%','107.5%'],a:2,ms:'Increase = ₹7.20. 7.20 ÷ 96 × 100 = 7.5%. Divide by the original price; dividing by the new price gives 6.98%.'},
+ {code:'Add Maths 0606',q:'Find dy/dx when y = (2x + 1)⁵.',o:['5(2x + 1)⁴','10(2x + 1)⁴','10(2x + 1)⁵','(2x + 1)⁶ ÷ 12'],a:1,ms:'Chain rule: 5(2x + 1)⁴ × 2 = 10(2x + 1)⁴. Forgetting the × 2 from the bracket is the classic lost mark.'},
+ {code:'Physics 0625',q:'A Nano\'s 12 V battery supplies a current of 3 A for 20 s. How much energy does it transfer?',o:['4 J','60 J','240 J','720 J'],a:3,ms:'E = VIt = 12 × 3 × 20 = 720 J.'},
+ {code:'Chemistry 0620',q:'Molten lead(II) bromide is electrolysed. What forms at the cathode?',o:['Bromine','Lead','Hydrogen','Oxygen'],a:1,ms:'Pb²⁺ ions move to the negative cathode and gain electrons: Pb²⁺ + 2e⁻ → Pb. Bromine forms at the anode.'},
+ {code:'Biology 0610',q:'Why does an enzyme stop working at a very high temperature?',o:['The enzyme is killed','Its active site changes shape','The substrate melts','It runs out of energy'],a:1,ms:'The enzyme is denatured: its active site changes shape, so the substrate no longer fits. "Killed" scores zero, because enzymes are not alive.'},
+ {code:'International Maths 0607',q:'What is the gradient of the line through (2, 3) and (6, 11)?',o:['0.5','2','4','8'],a:1,ms:'(11 − 3) ÷ (6 − 2) = 8 ÷ 4 = 2. Take the points in the same order on the top and the bottom.'},
+ {code:'Maths 0580',q:'Two fair coins are thrown. What is the probability that both land heads?',o:['1/2','1/3','1/4','3/4'],a:2,ms:'½ × ½ = ¼. Of the four outcomes, HH, HT, TH and TT, only one is both heads.'},
+ {code:'Physics 0625',q:'A sound wave has a frequency of 50 Hz and a wavelength of 6.8 m. What is its speed?',o:['7.4 m/s','56.8 m/s','340 m/s','0.136 m/s'],a:2,ms:'v = fλ = 50 × 6.8 = 340 m/s.'},
+ {code:'Chemistry 0620',q:'Which test result shows that carbon dioxide is present?',o:['A lit splint pops','A glowing splint relights','Limewater turns milky','Damp litmus paper is bleached'],a:2,ms:'CO₂ turns limewater milky. A pop means hydrogen, a relit splint means oxygen and bleached litmus means chlorine.'},
+];
+const CAM_HOOKS=['IGCSE Physics 0625, Chemistry 0620 and Biology 0610 test series: full mocks in real exam timings, each one marked with written feedback.','IGCSE Maths 0580, Additional Maths 0606 and International Maths 0607: topic tests first, then full mocks, every paper marked.','Open a real sample paper and its marking scheme before you buy anything. The first sample is free.','IGCSE Physics coaching in Whitefield in small batches of 12 to 15 students, with past papers and mock tests.'];
+const IB_HOOKS=['IB MYP and Diploma Maths and Science from ApniClass in Whitefield: concepts first, then exam-style practice.','Small batches of 12 to 15 students, with doubt-clearing, past papers and mock tests.','Ask ApniClass on WhatsApp what an IB Maths or Science plan would look like for your child.'];
+const KID=['12 Nanos!!','is that a mock paper car?','JAN to DEC 😭','ma\'am, look!','Paper 8 is HERE','I want the yellow one','beep beep 📣','my tuition?!','the black one is December'];
+
 const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[(Math.random()*a.length)|0], clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const pad=n=>String(n).padStart(2,'0');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -393,7 +506,10 @@ function at(s,o){s=((s%LEN)+LEN)%LEN;const f=s/LEN*N,i=f|0,a=f-i,j=(i+1)%N;
 function circ(d){d=((d%LEN)+LEN)%LEN;return d>LEN/2?d-LEN:d;}
 function nearestS(x,z){let best=1e9,bi=0;for(let i=0;i<N;i++){const d=(PX[i]-x)**2+(PZ[i]-z)**2;if(d<best){best=d;bi=i;}}return bi*LEN/N;}
 PLACES.forEach(p=>{p.s=nearestS(p.p[0],p.p[1]);p.eyes=0;});
-const S_WF=PLACES[0].s,S_SB=PLACES[2].s,S_KM=PLACES[3].s,S_MG=PLACES[4].s,S_IN=PLACES[5].s;
+const PI={};PLACES.forEach((p,i)=>PI[p.k]=i);
+const S_WF=PLACES[PI.wf].s,S_SB=PLACES[PI.sb].s,S_KM=PLACES[PI.km].s,S_MG=PLACES[PI.mg].s,S_IN=PLACES[PI.in].s,S_OA=PLACES[PI.oa].s;
+const SCHOOLS=SCHOOL_DATA.map((d,i)=>Object.assign({i,s:(PLACES[PI[d.pl]].s+d.ds)%LEN,eyes:0,last:-999,hk:0},d));
+function schoolNear(s,r){for(const sc of SCHOOLS)if(Math.abs(circ(s-sc.s))<r)return sc;return null;}
 function placeAt(s){s=((s%LEN)+LEN)%LEN;let k=0;for(let i=0;i<PLACES.length;i++)if(PLACES[i].s<=s)k=i;return k;}
 const coarse=[];for(let i=0;i<N;i+=6)coarse.push([PX[i],PZ[i]]);
 function roadDist(x,z){let b=1e9;for(const c of coarse){const d=(c[0]-x)**2+(c[1]-z)**2;if(d<b)b=d;}return Math.sqrt(b);}
@@ -449,6 +565,7 @@ const PASTEL=['#e9dcc3','#f1c9a5','#cfe0e8','#d6e6c8','#efd0d8','#f3e6a6','#d9d4
 const GLASS=['#7fa3b8','#5f86a0','#9db8c8','#6c8fa6','#8aa0b0'];
 const dm=new THREE.Object3D(),dc=new THREE.Color();let nLow=0,nTow=0;
 const placed=[];
+SCHOOLS.forEach(sc=>{const c=at(sc.s,29);placed.push([c.x,c.z,19]);});
 function free(x,z,r){if(Math.hypot(x-LAKE.x,z-LAKE.z)<LAKE.r+r+2)return false;for(const p of placed){if(Math.abs(p[0]-x)<p[2]+r&&Math.abs(p[1]-z)<p[2]+r)return false;}return true;}
 function addB(x,z,w,d,h,yaw,tower,col){
   const r=Math.max(w,d)*0.5;if(!free(x,z,r*0.8))return;if(roadDist(x,z)<12.5+r*0.75)return;
@@ -479,7 +596,7 @@ function addTree(x,z,big){if(nT>=3000)return;const sc=big?rand(2.6,3.8):rand(1.8
   dm.position.set(x,0,z);dm.rotation.set(0,0,0);dm.scale.set(1,sc/2.6,1);dm.updateMatrix();trunkM.setMatrixAt(nT,dm.matrix);
   dm.position.set(x,3+sc*0.7,z);dm.rotation.set(0,rand(0,3),0);dm.scale.set(sc*1.15,sc*0.8,sc*1.15);dm.updateMatrix();canopyM.setMatrixAt(nT,dm.matrix);
   canopyM.setColorAt(nT,dc.set(pick(TREEC)));nT++;}
-for(let i=0;i<N;i+=19){const s=i*LEN/N;for(const sg of[1,-1]){const p=at(s,sg*12.9);if(Math.hypot(p.x-LAKE.x,p.z-LAKE.z)>LAKE.r+3&&roadDist(p.x,p.z)>12)addTree(p.x,p.z,true);}}
+for(let i=0;i<N;i+=19){const s=i*LEN/N;for(const sg of[1,-1]){if(sg>0&&schoolNear(s,19))continue;const p=at(s,sg*12.9);if(Math.hypot(p.x-LAKE.x,p.z-LAKE.z)>LAKE.r+3&&roadDist(p.x,p.z)>12)addTree(p.x,p.z,true);}}
 for(let i=0;i<900;i++){const x=rand(-600,600),z=rand(-600,600);if(roadDist(x,z)>16&&free(x,z,3))addTree(x,z,false);}
 for(let i=0;i<40;i++){const a=rand(0,6.28),r=LAKE.r+rand(3,10);addTree(LAKE.x+Math.cos(a)*r,LAKE.z+Math.sin(a)*r,true);}
 trunkM.count=canopyM.count=nT;canopyM.instanceColor.needsUpdate=true;scene.add(trunkM,canopyM);
@@ -531,10 +648,10 @@ function billboard(s,lines,big){const p=at(s,18.5),yaw=Math.atan2(-p.tz,p.tx);
   const pan=new THREE.Mesh(new THREE.PlaneGeometry(12,4.9),new THREE.MeshLambertMaterial({map:t,emissive:new THREE.Color('#ffffff'),emissiveMap:t,emissiveIntensity:0.15}));
   pan.position.set(0,9.2,0.02);g.add(pan);signs.push(pan);
   const back=new THREE.Mesh(new THREE.BoxGeometry(12.3,5.2,0.3),pm);back.position.set(0,9.2,-0.18);g.add(back);}
-billboard(S_WF+150,['12 papers. 12 months.','apniclass.com/test-series']);
-billboard(S_SB-110,['Stuck at Silk Board?','Count the Nanos. There are 12.']);
-billboard(S_KM+90,['Marked in 2 to 4 days','IGCSE · A Level · IB']);
-billboard(S_MG+120,['One paper a month','apniclass.com/test-series']);
+billboard(S_OA+60,['Exam-style papers. Real feedback.','apniclass.com/test-series']);
+billboard(S_SB-58,['Stuck at Silk Board?','Count the Nanos. There are 12.']);
+billboard(S_KM+90,['Every paper marked,','with written feedback']);
+billboard(S_MG+120,['IGCSE · A Level · IB','Maths and Science · Whitefield']);
 billboard(S_IN+70,['Spotted all 12 Nanos?','Post it. Tag @apniclassofficial']);
 
 /* ApniClass building, Whitefield */
@@ -545,6 +662,49 @@ billboard(S_IN+70,['Spotted all 12 Nanos?','Post it. Tag @apniclassofficial']);
   sgn.position.set(0,16.2,3);g.add(sgn);signs.push(sgn);
   for(let i=0;i<4;i++){const w=new THREE.Mesh(new THREE.PlaneGeometry(13,1.6),new THREE.MeshLambertMaterial({color:'#4fd8e6',emissive:new THREE.Color('#4fd8e6'),emissiveIntensity:0.2}));w.position.set(0,2.6+i*3,6.02);g.add(w);}
 })();
+
+/* school campuses: gate with name board, forecourt, building, field, flag, go-slow sign */
+const fieldC=mk(256,128);(function(){const g=fieldC.getContext('2d');g.fillStyle='#6f9a4a';g.fillRect(0,0,256,128);g.strokeStyle='rgba(255,255,255,.75)';g.lineWidth=3;g.strokeRect(12,12,232,104);g.beginPath();g.moveTo(128,12);g.lineTo(128,116);g.stroke();g.beginPath();g.arc(128,64,20,0,7);g.stroke();})();
+const fieldMat=new THREE.MeshLambertMaterial({map:tex(fieldC)});
+const flagC=mk(96,64);(function(){const g=flagC.getContext('2d');g.fillStyle='#ff9933';g.fillRect(0,0,96,22);g.fillStyle='#ffffff';g.fillRect(0,21,96,22);g.fillStyle='#138808';g.fillRect(0,42,96,22);g.strokeStyle='#000080';g.lineWidth=2;g.beginPath();g.arc(48,32,8,0,7);g.stroke();})();
+const flagMat=new THREE.MeshLambertMaterial({map:tex(flagC),side:THREE.DoubleSide});
+const slowC=mk(256,320),slowT=tex(slowC);
+function drawSlow(){const g=slowC.getContext('2d');g.clearRect(0,0,256,320);g.fillStyle='#fff';g.strokeStyle='#d0141c';g.lineWidth=22;g.lineJoin='round';
+  g.beginPath();g.moveTo(128,20);g.lineTo(240,210);g.lineTo(16,210);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#111';[[100,0.9],[150,1]].forEach(([x,k])=>{g.beginPath();g.arc(x,108*k+(1-k)*120,13*k,0,7);g.fill();g.fillRect(x-11*k,124*k+(1-k)*130,22*k,40*k);g.fillRect(x-10*k,164*k+(1-k)*170,8*k,24*k);g.fillRect(x+2*k,164*k+(1-k)*170,8*k,24*k);});
+  g.fillStyle='#fff';g.fillRect(16,232,224,76);g.strokeStyle='#111';g.lineWidth=4;g.strokeRect(16,232,224,76);g.fillStyle='#111';g.textAlign='center';g.textBaseline='middle';
+  g.font='800 34px "Baloo 2",sans-serif';g.fillText('SCHOOL',128,256);g.font='700 26px "Baloo 2",sans-serif';g.fillText('GO SLOW',128,288);slowT.needsUpdate=true;}
+drawSlow();redraws.push(drawSlow);
+const slowMat=new THREE.MeshBasicMaterial({map:slowT,transparent:true});
+const SCHOOL_WALL=['#e8d8b8','#d7e3ee','#efd9c6','#dbe8d2','#f0e2b4','#e3d6e9'];
+const gateMat=new THREE.MeshLambertMaterial({color:'#efe7d6'}),wallMat=new THREE.MeshLambertMaterial({color:'#e2d4b8'});
+const schoolWin=winTex(8,3,false),schoolWinLit=winTex(8,3,true);
+SCHOOLS.forEach((sc,i)=>{
+  const c=at(sc.s,29),yaw=Math.atan2(-c.tz,c.tx);const g=new THREE.Group();g.position.set(c.x,0,c.z);g.rotation.y=yaw;scene.add(g);
+  const pad=new THREE.Mesh(new THREE.PlaneGeometry(34,9),new THREE.MeshLambertMaterial({color:'#cbbfa8'}));pad.rotation.x=-Math.PI/2;pad.position.set(0,0.06,12);g.add(pad);
+  const bm=new THREE.MeshLambertMaterial({color:SCHOOL_WALL[i%SCHOOL_WALL.length],map:schoolWin,emissiveMap:schoolWinLit,emissive:new THREE.Color('#ffffff'),emissiveIntensity:0});
+  sc.winMat=bm;
+  const bld=new THREE.Mesh(new THREE.BoxGeometry(28,11,9),[bm,bm,roofMat,roofMat,bm,bm]);bld.position.set(0,5.5,2.5);bld.castShadow=true;bld.receiveShadow=true;g.add(bld);
+  const wing=new THREE.Mesh(new THREE.BoxGeometry(8,7.5,14),[bm,bm,roofMat,roofMat,bm,bm]);wing.position.set(-12,3.75,-8);wing.castShadow=true;g.add(wing);
+  const field=new THREE.Mesh(new THREE.PlaneGeometry(22,12),fieldMat);field.rotation.x=-Math.PI/2;field.position.set(4,0.07,-10);g.add(field);
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,10,6),gateMat);pole.position.set(11,5,10);g.add(pole);
+  const flag=new THREE.Mesh(new THREE.PlaneGeometry(2.1,1.4),flagMat);flag.position.set(12.05,9.2,10);g.add(flag);sc.flag=flag;
+  [[-17,-5],[5,17]].forEach(([a,b])=>{const w=new THREE.Mesh(new THREE.BoxGeometry(b-a,1.7,0.35),wallMat);w.position.set((a+b)/2,0.85,17);g.add(w);});
+  [-5,5].forEach(x=>{const pl=new THREE.Mesh(new THREE.BoxGeometry(0.9,4.4,0.9),gateMat);pl.position.set(x,2.2,17);g.add(pl);});
+  const nc=mk(1024,230),nt=tex(nc);
+  const draw=()=>{const x=nc.getContext('2d');x.fillStyle='#16325c';x.fillRect(0,0,1024,230);x.strokeStyle='#e8c66a';x.lineWidth=8;x.strokeRect(8,8,1008,214);
+    x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';let fs=74;x.font=`800 ${fs}px "Baloo 2",sans-serif`;while(x.measureText(sc.name).width>960&&fs>36){fs-=2;x.font=`800 ${fs}px "Baloo 2",sans-serif`;}
+    x.fillText(sc.name,512,84);x.font='600 34px "Baloo 2",sans-serif';const areaW=x.measureText(sc.area).width;
+    const chips=sc.b.map(b=>({b,w:(b==='IB'?60:190)}));let tot=areaW+chips.reduce((a,c)=>a+c.w+16,0);let px=512-tot/2;
+    x.fillStyle='#d9e2ee';x.textAlign='left';x.fillText(sc.area,px,166);px+=areaW+16;
+    chips.forEach(ch=>{x.fillStyle=ch.b==='IB'?'#4fd8e6':'#ff8a2a';rr(x,px,142,ch.w,48,24);x.fill();x.fillStyle='#16325c';x.textAlign='center';x.font='800 30px "Baloo 2",sans-serif';x.fillText(ch.b,px+ch.w/2,167);x.font='600 34px "Baloo 2",sans-serif';px+=ch.w+16;});
+    nt.needsUpdate=true;};
+  draw();redraws.push(draw);
+  const board=new THREE.Mesh(new THREE.BoxGeometry(11.2,2.5,0.3),[gateMat,gateMat,gateMat,gateMat,new THREE.MeshBasicMaterial({map:nt}),gateMat]);board.position.set(0,5.6,17);g.add(board);
+  const p2=at(sc.s-34,11.2),sy=Math.atan2(-p2.tx,-p2.tz);const sgn=new THREE.Group();sgn.position.set(p2.x,0,p2.z);sgn.rotation.y=sy;scene.add(sgn);
+  const sp=new THREE.Mesh(new THREE.BoxGeometry(0.12,2.6,0.12),gateMat);sp.position.y=1.3;sgn.add(sp);
+  const sf=new THREE.Mesh(new THREE.PlaneGeometry(1.3,1.62),slowMat);sf.position.set(0,3.2,0.08);sgn.add(sf);const sb=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.5),gateMat);sb.position.set(0,3.2,0.06);sb.rotation.y=Math.PI;sgn.add(sb);
+});
 
 /* Namma Metro purple line along MG Road */
 const metroI0=Math.floor(((S_MG-170+LEN)%LEN)/LEN*N),metroCnt=Math.floor(340/LEN*N);
@@ -741,12 +901,14 @@ const phoneG=new THREE.BoxGeometry(0.09,0.16,0.02);
 const CLOTH=['#c0392b','#2e86de','#f1c40f','#16a085','#8e44ad','#ecf0f1','#e67e22','#34495e','#d35480','#2c3e50','#f6e58d','#7bed9f'].map(c=>new THREE.MeshLambertMaterial({color:c}));
 const SKIN=['#6b4a35','#8a5d3b','#a8754f','#c69472','#5a3d2b'].map(c=>new THREE.MeshLambertMaterial({color:c}));
 const phoneMat=new THREE.MeshBasicMaterial({color:'#bfe3ff'});
-function addPed(s,o){const g=new THREE.Group();const b=new THREE.Mesh(pedBodyG,pick(CLOTH));const h=new THREE.Mesh(pedHeadG,pick(SKIN));h.position.y=1.62;
+const UNI=['#1f3a68','#f2f2f2','#7a1f2b','#4a6b8a','#2e4d3a','#f2f2f2'].map(c=>new THREE.MeshLambertMaterial({color:c}));
+function addPed(s,o,sch){const g=new THREE.Group();const b=new THREE.Mesh(pedBodyG,sch!==undefined?pick(UNI):pick(CLOTH));const h=new THREE.Mesh(pedHeadG,pick(SKIN));h.position.y=1.62;
   const ph=new THREE.Mesh(phoneG,phoneMat);ph.position.set(0.14,1.5,0.32);ph.visible=false;g.add(b,h,ph);scene.add(g);
-  const sc=rand(0.9,1.08);g.scale.setScalar(sc);
-  peds.push({g,ph,s,o,v:Math.random()<0.45?rand(-1.3,1.3):0,yaw:0,watch:0,ty:0,last:-99,phoneUntil:0,reelAt:0});}
+  const sc=sch!==undefined?rand(0.7,0.86):rand(0.9,1.08);g.scale.setScalar(sc);
+  peds.push({g,ph,s,o,school:sch,v:sch!==undefined?0:Math.random()<0.45?rand(-1.3,1.3):0,yaw:0,watch:0,ty:0,last:-99,phoneUntil:0,reelAt:0});}
 const NP=mobile?95:150;
 for(let i=0;i<NP;i++){const left=Math.random()<0.72;addPed(rand(0,LEN),(left?1:-1)*rand(8,10.8));}
+SCHOOLS.forEach(sc=>{for(let i=0;i<(mobile?9:15);i++)addPed(sc.s+rand(-13,13),rand(8.3,10.9),sc.i);});
 [[S_SB,30],[S_KM,22],[S_MG,18],[S_IN,16],[S_WF+40,14]].forEach(([c,n])=>{for(let i=0;i<(mobile?n*0.6:n);i++)addPed(c+rand(-45,45),rand(8,10.8));});
 const flashes=[];for(let i=0;i<6;i++){const f=new THREE.Sprite(new THREE.SpriteMaterial({map:glowT,color:'#ffffff',transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}));f.scale.set(1.6,1.6,1);scene.add(f);flashes.push({f,t:0});}
 let flashI=0;
@@ -775,6 +937,7 @@ function setTime(k){TIME=k;const t=TIMES[k];scene.background=new THREE.Color(t.b
   lampGlow.material.opacity=t.night>0.3?t.night*0.9:0;beamMat.opacity=vBeamMat.opacity=t.night>0.3?0.85*t.night+0.1:0;poolMat.opacity=t.night>0.3?0.32*t.night:0;
   headMat.emissiveIntensity=t.night>0.3?2.2:0.2;tailMat.emissiveIntensity=t.night>0.3?1.6:0.2;
   signs.forEach(m=>{if(m.material.emissiveIntensity!==undefined)m.material.emissiveIntensity=t.night>0.3?0.75:0.15;});
+  SCHOOLS.forEach(sc=>sc.winMat.emissiveIntensity=t.night*0.7);
   rain.visible=!!t.rain;roadMat.roughness=t.rough;roadMat.metalness=t.rain?0.35:0;ground.material.color.set(t.ground);
   clock0=t.clock;clockT=0;
   document.querySelectorAll('#segTime button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.time===k));
@@ -801,7 +964,7 @@ const meep=(f,w,v=0.09)=>{horn(f,w,0.1,v);horn(f,w+0.14,0.16,v);};
 const stats={heads:0,phones:0,reels:0,convoyM:0};
 let speedBase=12,jamOn=true,lead=S_WF+70,honkUntil=-1,simT=0;
 cars.forEach((c,i)=>{c.s=lead-i*GAP;c.v=speedBase;});
-function jamF(s){return jamOn&&Math.abs(circ(s-S_SB))<75?0.2:1;}
+function jamF(s){if(jamOn&&Math.abs(circ(s-S_SB))<75)return 0.2;return schoolNear(s,30)?0.5:1;}
 function bumpPlace(n){const k=placeAt(cars[0].s);PLACES[k].eyes+=n;}
 
 /* bubbles */
@@ -863,13 +1026,56 @@ function pickAt(x,y){ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromC
 let cardCar=-1;
 const sw=$('cSw');COLS.forEach((c,i)=>{const b=document.createElement('button');b.style.background=c;b.title=COLN[i];b.setAttribute('aria-label','Paint '+COLN[i]);b.onclick=()=>{if(cardCar<0)return;const car=cars[cardCar];car.color=c;drawCar(car);fillCard();};sw.appendChild(b);});
 function fillCard(){const c=cars[cardCar];$('cChip').textContent=c.month;$('cChip').style.background=c.color;$('cChip').style.color=textOn(c.color);
-  $('cTitle').textContent=MONF[c.i];$('cMeta').textContent='Nano '+pad(c.i+1)+' of 12 · '+COLN[COLS.indexOf(c.color)>=0?COLS.indexOf(c.color):c.i];
-  $('cText').textContent=PAPER[c.i];$('cRoof').value=c.roof;sw.querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',COLS[i]===c.color));}
-function openCard(i){cardCar=i;fillCard();$('card').hidden=false;cars[i].bounceT=simT;meep(330*Math.pow(2,i/12),0,0.1);}
+  $('cTitle').textContent=MONF[c.i];$('cMeta').textContent='Nano '+pad(c.i+1)+' of 12 · '+QUIZ[c.i].code;renderQuiz();$('cRoof').value=c.roof;sw.querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',COLS[i]===c.color));}
+function openCard(i){$('card').querySelector('details').open=false;cardCar=i;fillCard();$('card').hidden=false;cars[i].bounceT=simT;meep(330*Math.pow(2,i/12),0,0.1);}
 $('cClose').onclick=()=>{$('card').hidden=true;cardCar=-1;};
 $('cRoof').addEventListener('input',e=>{if(cardCar<0)return;cars[cardCar].roof=e.target.value.toUpperCase().slice(0,12);drawCar(cars[cardCar]);});
 $('cFollow').onclick=()=>{if(cardCar<0)return;follow=cardCar;camMode='follow';snapCam=true;$('phone').hidden=true;document.body.classList.remove('phone');document.querySelectorAll('#segCam button').forEach(b=>b.setAttribute('aria-pressed','false'));toast('Following '+MONF[cardCar]+'. Pick another view in the dock to switch.');};
 $('cHonk').onclick=()=>{if(cardCar<0)return;if(!audio.on)setSound(true);cars[cardCar].bounceT=simT;meep(330*Math.pow(2,cardCar/12),0,0.12);honkUntil=simT+1.2;};
+
+/* ---------- school hooks ---------- */
+let hookT=0,hookHold=false,hookSc=null;
+function showHook(sc){hookSc=sc;const cam=sc.b.includes('Cambridge'),ib=sc.b.includes('IB');
+  $('hEb').textContent='School gate · '+sc.area;$('hTitle').textContent='Outside '+sc.name;
+  $('hBd').innerHTML=sc.b.map(b=>`<span class="bdg ${b==='IB'?'ib':'cam'}">${b}</span>`).join('');
+  const pool=[...(cam?CAM_HOOKS:[]),...(ib?IB_HOOKS:[])];$('hText').textContent=pool[sc.hk++%pool.length];
+  const a=$('hCta');if(cam){a.textContent='Try a free sample paper';a.href=TS+'&utm_content='+sc.slug;}
+  else{a.textContent='Ask on WhatsApp';a.href=WA(`Hi ApniClass, I saw the 12 Nanos at ${sc.name}. I'd like to know about IB Maths and Science support.`);}
+  $('hShare').textContent='Share with '+sc.sh+' parents';$('hook').hidden=false;hookT=15;
+  if(simT>2)meep(392,0,0.07);}
+['mouseenter','focusin'].forEach(e=>$('hook').addEventListener(e,()=>hookHold=true));['mouseleave','focusout'].forEach(e=>$('hook').addEventListener(e,()=>hookHold=false));
+$('hClose').onclick=()=>{$('hook').hidden=true;};
+function copyText(t,btn,label){const done=ok=>{btn.textContent=ok?'Copied, paste it in the group':'Copy did not work, long-press the text';setTimeout(()=>btn.textContent=label,2200);};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>done(true)).catch(()=>{$('hText').textContent=t;done(false);});else{$('hText').textContent=t;done(false);}}
+$('hShare').onclick=()=>{if(!hookSc)return;copyText(`🚗×12 ApniClass sent 12 Tata Nanos to ${hookSc.name}! Can you spot all 12 and beat each Nano's exam question? ${PUB}#${hookSc.slug}`,$('hShare'),'Share with '+hookSc.sh+' parents');};
+function goSchool(sc,quiet){lead=sc.s-75;cars.forEach((c,i)=>{c.s=lead-i*GAP;c.v=speedBase*jamF(c.s);});streetS=null;snapCam=true;sc.last=-999;if(!quiet)toast('Convoy heading to '+sc.name+'.');}
+SCHOOLS.forEach(sc=>{const o=document.createElement('option');o.value=sc.slug;o.textContent=sc.sh+' · '+sc.b.join(' + ');$('selSchool').appendChild(o);});
+$('selSchool').addEventListener('change',e=>{const sc=SCHOOLS.find(x=>x.slug===e.target.value);if(sc)goSchool(sc);e.target.value='';});
+addEventListener('hashchange',()=>{const sc=SCHOOLS.find(x=>x.slug===location.hash.slice(1));if(sc)goSchool(sc);});
+
+/* ---------- quiz + passport ---------- */
+let pass=new Array(12).fill(0);try{const v=JSON.parse(localStorage.getItem('nanoPass')||'null');if(Array.isArray(v)&&v.length===12)pass=v;}catch(e){}
+function savePass(){try{localStorage.setItem('nanoPass',JSON.stringify(pass));}catch(e){}}
+const passCount=()=>pass.reduce((a,b)=>a+(b?1:0),0);
+function renderPass(){$('passDots').innerHTML=pass.map((p,i)=>`<i style="${p?'background:'+COLS[i]+';border-color:'+COLS[i]:''}" title="${MONF[i]}${p?' · stamped':''}"></i>`).join('');$('passN').textContent=passCount()+'/12';}
+renderPass();
+function renderQuiz(){const c=cars[cardCar],qz=QUIZ[c.i];$('qLab').textContent=(pass[c.i]?'Stamped ✓ · ':'Beat the '+c.month+' Nano · ')+qz.code;$('qQ').textContent=qz.q;
+  const box=$('qOpts');box.innerHTML='';$('qRes').hidden=true;
+  qz.o.forEach((t,k)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>answer(k,b);box.appendChild(b);});}
+function answer(k,b){const c=cars[cardCar],qz=QUIZ[c.i],btns=[...$('qOpts').children];btns.forEach(x=>x.disabled=true);btns[qz.a].classList.add('ok');
+  const right=k===qz.a;if(!right)b.classList.add('no');const r=$('qRes');r.hidden=false;r.innerHTML='';
+  const h=document.createElement('b');h.textContent=right?(pass[c.i]?'Correct again.':'Correct! '+c.month+' stamp collected.'):'Not quite. Here is how the mark is earned:';r.appendChild(h);
+  const ms=document.createElement('span');ms.className='ms';ms.textContent='✎ '+qz.ms;r.appendChild(ms);
+  if(!right){const t=document.createElement('button');t.className='act';t.textContent='Try again';t.onclick=renderQuiz;r.appendChild(t);}
+  if(right){const first=!pass[c.i];pass[c.i]=1;savePass();renderPass();c.bounceT=simT;meep(330*Math.pow(2,c.i/12),0,0.11);confetti(36);
+    $('qLab').textContent='Stamped ✓ · '+qz.code;if(first&&passCount()===12)setTimeout(showYear,1100);
+    else if(first){const nx=pass.indexOf(0);if(nx>=0){const t=document.createElement('button');t.className='act hot';t.textContent='Next: '+MON[nx]+' Nano';t.onclick=()=>openCard(nx);r.appendChild(t);}}}}
+function confetti(n){if(reduced)return;for(let i=0;i<n;i++){const d=document.createElement('i');d.className='cf';d.style.left=rand(5,95)+'vw';d.style.background=pick(COLS);
+  d.style.setProperty('--dx',rand(-80,80)+'px');d.style.setProperty('--r',rand(300,900)+'deg');d.style.animationDelay=rand(0,0.4)+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3200);}}
+function showYear(){$('yCta').href=TS+'&utm_content=passport_complete';$('yWa').href=WA('Hi ApniClass, I finished all 12 Nano questions. Can I try a sample paper?');$('year').hidden=false;confetti(120);}
+$('yClose').onclick=()=>$('year').hidden=true;
+$('bQuiz').onclick=()=>{const nx=pass.indexOf(0);openCard(nx>=0?nx:0);};
+(function(){const d=Math.ceil((new Date(2027,4,1)-new Date())/864e5);if(d>0)$('cdn').textContent=d+' days to the May 2027 exams';})();
 
 /* ---------- controls ---------- */
 document.querySelectorAll('#segCam button').forEach(b=>b.onclick=()=>setCam(b.dataset.cam));
@@ -897,11 +1103,12 @@ $('bSnap').onclick=()=>{
   logo(g,540,1140,560,62);g.textAlign='center';g.textBaseline='middle';
   const pl=PLACES[placeAt(cars[0].s)];
   g.fillStyle=BR.chalk;g.font='800 50px "Baloo 2",sans-serif';g.fillText('Spotted: 12 ApniClass Nanos',540,1212);
-  g.fillStyle='#a3aba7';g.font='600 30px "Baloo 2",sans-serif';g.fillText(pl.en+', Bengaluru · '+$('clock').textContent,540,1262);
+  g.fillStyle='#a3aba7';g.font='600 30px "Baloo 2",sans-serif';g.fillText((schoolNear(cars[0].s,70)?'Outside '+schoolNear(cars[0].s,70).name:pl.en)+', Bengaluru · '+$('clock').textContent,540,1262,1000);
   g.fillStyle=BR.yellow;g.font='600 27px "IBM Plex Mono",monospace';g.fillText('12 Nanos · 12 months · 12 papers · apniclass.com',540,1310);
   COLS.forEach((c,i)=>{g.fillStyle=c;g.fillRect(i*90,1080,90,8);});
   $('snapImg').src=out.toDataURL('image/jpeg',0.9);
-  $('snapCap').value=`Just saw 12 ApniClass Nanos in a line on ${pl.en} 🚗×12 One for every month of the test series. Did you spot them? #ApniClassNanos #Bengaluru #Namma${pl.sh.replace(/[^A-Za-z]/g,'')}`;
+  const scn=schoolNear(cars[0].s,70);
+  $('snapCap').value=`Just saw 12 ApniClass Nanos in a line ${scn?'outside '+scn.name:'on '+pl.en} 🚗×12 One for every month of the test series. Did you spot them? #ApniClassNanos #Bengaluru #Namma${pl.sh.replace(/[^A-Za-z]/g,'')}`;
   $('snap').hidden=false;stats.reels++;};
 $('snapClose').onclick=()=>$('snap').hidden=true;
 $('snapCopy').onclick=()=>{const ta=$('snapCap');navigator.clipboard.writeText(ta.value).then(()=>{$('snapCopy').textContent='Copied';setTimeout(()=>$('snapCopy').textContent='Copy caption',1500);}).catch(()=>{ta.focus();ta.select();$('snapCopy').textContent='Selected, press copy';});};
@@ -917,10 +1124,10 @@ function plan(){const v=id=>Math.max(0,+$(id).value||0);
 document.querySelectorAll('#plan input').forEach(i=>i.addEventListener('input',plan));
 $('bPlan').onclick=()=>{plan();$('plan').hidden=false;};$('pClose').onclick=()=>$('plan').hidden=true;
 $('pSim').onclick=()=>{const km=stats.convoyM/1000;if(km<0.05){toast('Let the convoy drive a little first.');return;}$('pImp').value=Math.round(stats.heads/km);plan();};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['snap','plan','intro'].forEach(id=>$(id).hidden=true);$('card').hidden=true;cardCar=-1;}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['snap','plan','intro','year'].forEach(id=>$(id).hidden=true);$('card').hidden=true;cardCar=-1;}});
 
 /* phone overlay */
-const CMTS=[['blr.techie','12 Nanos in a line?? only in Bengaluru 😭'],['macha_99','which coaching is this'],['koramangala.kid','APNI CLASS, the IGCSE one in Whitefield?'],['nano.gang','Nano gang 🫡'],['priya.r','I counted. It is 12. One for each month'],['traffic_ka_raja','so slow at Silk Board I read all 12 cars'],['ib.mom','my son needs paper 8 🙏'],['indiranagar.eats','the yellow one honked at me 😂'],['auto_anna','even my auto stopped to look'],['ritu.k','better than any billboard honestly'],['whitefield.dad','finally an ad worth stuck traffic'],['sanj','is the black one December? 🖤'],['cubbon.runner','they look like little chalk boxes'],['dev.codes','bro rented a whole fleet of Nanos'],['aarav.11','following them to Indiranagar brb']];
+const CMTS=[['blr.techie','12 Nanos in a line?? only in Bengaluru 😭'],['macha_99','which coaching is this'],['koramangala.kid','APNI CLASS, the IGCSE one in Whitefield?'],['nano.gang','Nano gang 🫡'],['priya.r','I counted. It is 12. One for each month'],['traffic_ka_raja','so slow at Silk Board I read all 12 cars'],['ib.mom','my son needs paper 8 🙏'],['indiranagar.eats','the yellow one honked at me 😂'],['auto_anna','even my auto stopped to look'],['ritu.k','better than any billboard honestly'],['whitefield.dad','finally an ad worth stuck traffic'],['sanj','is the black one December? 🖤'],['cubbon.runner','they look like little chalk boxes'],['dev.codes','bro rented a whole fleet of Nanos'],['aarav.11','following them to Indiranagar brb'],['tisb.parent','they parked outside the school gate 😭'],['g10.physics','is this the 0625 mock car'],['dp2.life','do they do IB too?'],['whitefield.mom','free sample paper? sending to the class group'],['sarjapur.kid','the whole school ran to the gate']];
 let phoneStart=0,cmtT=0,heartT=0,cmtN=0,likes=0;
 function phoneTick(dt){if($('phone').hidden)return;const t=simT-phoneStart;$('pRec').textContent=pad(Math.floor(t/60))+':'+pad(Math.floor(t%60));
   $('pWatch').textContent='LIVE · '+(1.2+stats.heads*0.006).toFixed(1)+'k';cmtT-=dt;heartT-=dt;
@@ -939,6 +1146,7 @@ function drawMini(){mg.clearRect(0,0,mini.width,mini.height);
   if(jamOn){const p=at(S_SB,0);mg.fillStyle='rgba(232,50,47,.35)';mg.beginPath();mg.arc(mmX(p.x),mmZ(p.z),9*MDPR,0,7);mg.fill();}
   mg.font=`600 ${9*MDPR}px "Baloo 2",sans-serif`;mg.textAlign='center';
   PLACES.forEach(p=>{const q=at(p.s,0);mg.fillStyle='rgba(163,171,167,.95)';const ox=q.x>0?-1:1;mg.fillText(p.sh,mmX(q.x)+ox*0*MDPR,mmZ(q.z)+(q.z>0?14:-7)*MDPR);});
+  SCHOOLS.forEach(sc=>{const q=at(sc.s,22);mg.fillStyle=sc.b.includes('IB')&&sc.b.length===1?'#4fd8e6':sc.b.length>1?'#ffe14a':'#ff8a2a';mg.fillRect(mmX(q.x)-3*MDPR,mmZ(q.z)-3*MDPR,6*MDPR,6*MDPR);});
   for(let i=11;i>=0;i--){const r=cars[i].root.position;mg.fillStyle=cars[i].color;mg.strokeStyle=BR.board;mg.lineWidth=1*MDPR;mg.beginPath();mg.arc(mmX(r.x),mmZ(r.z),3*MDPR,0,7);mg.fill();mg.stroke();}}
 mini.addEventListener('click',e=>{const r=mini.getBoundingClientRect();const x=(e.clientX-r.left)/mmS-5/mmS+MB.x0,z=(e.clientY-r.top)/mmS-5/mmS+MB.z0;
   const s=nearestS(x,z);lead=s;cars.forEach((c,i)=>{c.s=s-i*GAP;c.v=speedBase*jamF(c.s);});streetS=null;snapCam=true;toast('Convoy sent to '+PLACES[placeAt(s)].en+'.');});
@@ -977,7 +1185,7 @@ function update(dt){
     if(d<range+4&&d>-GAP*11-range){let bi=clamp(Math.round(-d/GAP),0,11),bd=1e9,bx=0,bz=0;
       for(let j=Math.max(0,bi-1);j<=Math.min(11,bi+1);j++){const r=cars[j].root.position;const dd=Math.hypot(r.x-q.x,r.z-q.z);if(dd<bd){bd=dd;bx=r.x-q.x;bz=r.z-q.z;}}
       if(bd<range){p.watch=simT+1.6;p.ty=Math.atan2(bx,bz);
-        if(simT-p.last>40){p.last=simT;stats.heads++;bumpPlace(1);
+        if(simT-p.last>40){p.last=simT;stats.heads++;bumpPlace(1);if(p.school!==undefined){SCHOOLS[p.school].eyes++;if(Math.random()<0.5){bubble(q.x,1.9,q.z,pick(KID));continue;}}
           if(Math.random()<pProb){p.phoneUntil=simT+rand(4,9);stats.phones++;if(Math.random()<0.45)p.reelAt=simT+rand(3,8);bubble(q.x,2.3,q.z,pick(['📸','🤳','📱 recording']));}
           else if(Math.random()<0.3)bubble(q.x,2.2,q.z,pick(['👀','😲','wow','Nano!!','12?!','🔥']));}}}
     let ty;if(simT<p.watch)ty=p.ty;else if(p.v){const s=p.v>0?1:-1;ty=Math.atan2(q.tx*s,q.tz*s);}else ty=Math.atan2(-q.lx*Math.sign(p.o),-q.lz*Math.sign(p.o));
@@ -995,19 +1203,25 @@ function update(dt){
   // ambient honks
   if(audio.on){ambT-=dt;if(ambT<=0){const nearJam=jamOn&&Math.abs(circ(cars[0].s-S_SB))<120;ambT=nearJam?rand(0.3,1.2):rand(1.8,5);horn(rand(300,620),0,rand(0.08,0.3),nearJam?0.03:0.018);}}
   camUpdate(dt);phoneTick(dt);
+  if(!$('hook').hidden&&!hookHold){hookT-=dt;if(hookT<=0)$('hook').hidden=true;}
+  for(const sc of SCHOOLS)sc.flag.rotation.y=Math.sin(simT*3+sc.i)*0.25;
   if(toastT>0){toastT-=dt;if(toastT<=0)$('toast').style.opacity=0;}
   hudT-=dt;if(hudT<=0){hudT=0.2;
     $('sEye').textContent=fmt(stats.heads*2);$('sHead').textContent=fmt(stats.heads);$('sPhone').textContent=fmt(stats.phones);$('sReel').textContent=fmt(stats.reels);
     const k=placeAt(cars[0].s);if(k!==lastPlace){lastPlace=k;$('pk').textContent=PLACES[k].kn;$('pe').textContent=PLACES[k].en;
-      if(k===2&&jamOn&&simT>3)toast('Entering Silk Board. Everyone is stuck, so everyone is looking.');}
+      if(k===PI.sb&&jamOn&&simT>3)toast('Entering Silk Board. Everyone is stuck, so everyone is looking.');}
     const mins=clock0+clockT/60*6;const h=Math.floor(mins/60)%24,mm=Math.floor(mins%60);$('clock').textContent=pad(h%12||12)+':'+pad(mm)+(h<12?' AM':' PM');
     $('kmh').textContent=Math.round(cars[0].v*3.6)+' km/h';
-    const top=PLACES.filter(p=>p.eyes>0).sort((a,b)=>b.eyes-a.eyes).slice(0,3);
+    const st=SCHOOLS.filter(p=>p.eyes>0).sort((a,b)=>b.eyes-a.eyes).slice(0,3);
+    const top=st.length?st:PLACES.filter(p=>p.eyes>0).sort((a,b)=>b.eyes-a.eyes).slice(0,3);
+    $('sTopL').textContent=st.length?'Loudest school gates':'Where Bengaluru looked most';
     if(top.length)$('sTop').innerHTML=top.map(p=>`<li><span>${p.sh}</span><span>${fmt(p.eyes*2)}</span></li>`).join('');
+    const near=schoolNear(cars[0].s+12,12);if(near&&simT-near.last>45){near.last=simT;showHook(near);}
     if(innerWidth>760)drawMini();}
 }
 
 /* ---------- loop ---------- */
+{const sc=SCHOOLS.find(x=>x.slug===location.hash.slice(1));if(sc){goSchool(sc,true);$('introP').textContent=`The 12 ApniClass Nanos are on their way to ${sc.name}, ${sc.area}. Watch the school gate, then beat each Nano's exam question.`;}}
 setTime('morning');setCam('cinema');cars.forEach(c=>{const q=at(c.s,LANE);c.root.position.set(q.x,0,q.z);});drawMini();
 let last=performance.now();
 function frame(now){requestAnimationFrame(frame);const dt=clamp((now-last)/1000,0,0.05);last=now;if(document.hidden)return;update(dt);renderer.render(scene,camera);}
