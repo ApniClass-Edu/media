@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="12 Tata Nanos in ApniClass colours drive past the IB and Cambridge schools of East Bengaluru. Beat each Nano's exam question and collect all 12 stamps.">
+<meta name="description" content="12 Tata Nanos in ApniClass colours drive past the IB and Cambridge schools of East Bengaluru. Beat each Nano's IGCSE exam question and collect all 12 stamps.">
 <meta property="og:title" content="ApniClass 12 Nanos">
 <meta property="og:description" content="12 Nanos. 12 Months. 12 exam questions. Can you collect all 12 stamps?">
+<link rel="canonical" href="https://apniclass-edu.github.io/media/12-nanos/">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>ApniClass 12 Nanos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -215,7 +216,7 @@ a.act{text-decoration:none}
 <div id="brand" class="hud panel">
   <div class="logo"><span class="a">APNI</span><span class="b">▷</span><span class="c">CLASS</span></div>
   <div class="sub"><b>12 Nanos · 12 Months</b><span id="cdn">One convoy, one city</span></div>
-  <div class="pass" title="Nano Passport: answer each Nano's exam question to collect its stamp"><div class="dots" id="passDots"></div><span class="n" id="passN">0/12</span></div>
+  <div class="pass" role="button" tabindex="0" id="passBtn" style="cursor:pointer" title="Nano Passport: answer each Nano's exam question to collect its stamp"><div class="dots" id="passDots"></div><span class="n" id="passN">0/12</span></div>
 </div>
 
 <div id="place" class="hud panel" aria-live="polite">
@@ -263,6 +264,7 @@ a.act{text-decoration:none}
   <button class="act" id="bSnap">Snap photo</button>
   <label class="spd" for="speed" title="Speed"><input type="range" id="speed" min="4" max="20" step="1" value="12"><output id="speedOut">43 km/h</output></label>
   <button class="act" id="bSound" aria-pressed="false">Sound off</button>
+  <a class="act" id="bSite" target="_blank" rel="noopener" href="https://apniclass.com/test-series/?utm_source=12nanos&amp;utm_medium=sim&amp;utm_campaign=12_nanos&amp;utm_content=dock">Free sample paper ↗</a>
   <button class="act" id="bPlan">Run it for real</button>
 </div>
 
@@ -298,7 +300,7 @@ a.act{text-decoration:none}
     <div class="watch" id="pWatch">LIVE · 1.2k</div>
     <div class="side"><span>♥</span><b id="pLikes">0</b><span>💬</span><b id="pCm">0</b><span>↗</span><b>Share</b></div>
     <div class="cmts" id="pCmts"></div>
-    <div class="who"><b>@spotted.blr</b> · 12 Nanos in a line?! 🚗×12<br><span style="opacity:.8">#ApniClassNanos #Bengaluru</span></div>
+    <div class="who"><b>@spotted.blr</b> · 12 Nanos in a line?! 🚗×12<br><span style="opacity:.8">Free sample paper: apniclass.com/test-series #ApniClassNanos #Bengaluru</span></div>
   </div>
 </div>
 
@@ -323,6 +325,7 @@ a.act{text-decoration:none}
     <div class="row">
       <a class="btn pri" id="yCta" target="_blank" rel="noopener" href="#" style="text-decoration:none">Try a free sample paper</a>
       <a class="btn sec" id="yWa" target="_blank" rel="noopener" href="#" style="text-decoration:none">Ask on WhatsApp</a>
+      <button class="btn sec" id="yShare">Challenge a friend</button>
       <button class="btn sec" id="yClose">Keep driving</button>
     </div>
   </div>
@@ -346,6 +349,9 @@ a.act{text-decoration:none}
     <div class="go">
       <button class="btn pri" id="goSound">Start with sound</button>
       <button class="btn sec" id="goQuiet">Watch quietly</button>
+    </div>
+    <p class="fine" style="margin-top:12px">The Nanos are simulated, for now. The test series is real: <a href="https://apniclass.com/test-series/?utm_source=12nanos&amp;utm_medium=sim&amp;utm_campaign=12_nanos&amp;utm_content=intro" target="_blank" rel="noopener" style="color:var(--yellow)">try a free sample paper on apniclass.com</a>.</p>
+    <div hidden>
     </div>
   </div>
 </div>
@@ -1045,7 +1051,7 @@ function showHook(sc){hookSc=sc;const cam=sc.b.includes('Cambridge'),ib=sc.b.inc
   if(simT>2)meep(392,0,0.07);}
 ['mouseenter','focusin'].forEach(e=>$('hook').addEventListener(e,()=>hookHold=true));['mouseleave','focusout'].forEach(e=>$('hook').addEventListener(e,()=>hookHold=false));
 $('hClose').onclick=()=>{$('hook').hidden=true;};
-function copyText(t,btn,label){const done=ok=>{btn.textContent=ok?'Copied, paste it in the group':'Copy did not work, long-press the text';setTimeout(()=>btn.textContent=label,2200);};
+function copyText(t,btn,label){const done=ok=>{if(btn.id==='passBtn')return;btn.textContent=ok?'Copied, paste it in the chat':'Copy did not work, long-press the text';setTimeout(()=>btn.textContent=label,2200);};
   if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>done(true)).catch(()=>{$('hText').textContent=t;done(false);});else{$('hText').textContent=t;done(false);}}
 $('hShare').onclick=()=>{if(!hookSc)return;copyText(`🚗×12 ApniClass sent 12 Tata Nanos to ${hookSc.name}! Can you spot all 12 and beat each Nano's exam question? ${PUB}#${hookSc.slug}`,$('hShare'),'Share with '+hookSc.sh+' parents');};
 function goSchool(sc,quiet){lead=sc.s-75;cars.forEach((c,i)=>{c.s=lead-i*GAP;c.v=speedBase*jamF(c.s);});streetS=null;snapCam=true;sc.last=-999;if(!quiet)toast('Convoy heading to '+sc.name+'.');}
@@ -1066,7 +1072,10 @@ function answer(k,b){const c=cars[cardCar],qz=QUIZ[c.i],btns=[...$('qOpts').chil
   const right=k===qz.a;if(!right)b.classList.add('no');const r=$('qRes');r.hidden=false;r.innerHTML='';
   const h=document.createElement('b');h.textContent=right?(pass[c.i]?'Correct again.':'Correct! '+c.month+' stamp collected.'):'Not quite. Here is how the mark is earned:';r.appendChild(h);
   const ms=document.createElement('span');ms.className='ms';ms.textContent='✎ '+qz.ms;r.appendChild(ms);
+  const subj=qz.code.replace(/\s*\d{4}$/,'');const lk=document.createElement('a');lk.className='act';lk.target='_blank';lk.rel='noopener';
+  lk.href=TS+'&utm_content=quiz_'+c.month.toLowerCase();lk.textContent='Try a full '+subj+' paper free →';lk.style.marginTop='6px';
   if(!right){const t=document.createElement('button');t.className='act';t.textContent='Try again';t.onclick=renderQuiz;r.appendChild(t);}
+  r.appendChild(lk);
   if(right){const first=!pass[c.i];pass[c.i]=1;savePass();renderPass();c.bounceT=simT;meep(330*Math.pow(2,c.i/12),0,0.11);confetti(36);
     $('qLab').textContent='Stamped ✓ · '+qz.code;if(first&&passCount()===12)setTimeout(showYear,1100);
     else if(first){const nx=pass.indexOf(0);if(nx>=0){const t=document.createElement('button');t.className='act hot';t.textContent='Next: '+MON[nx]+' Nano';t.onclick=()=>openCard(nx);r.appendChild(t);}}}}
@@ -1074,6 +1083,9 @@ function confetti(n){if(reduced)return;for(let i=0;i<n;i++){const d=document.cre
   d.style.setProperty('--dx',rand(-80,80)+'px');d.style.setProperty('--r',rand(300,900)+'deg');d.style.animationDelay=rand(0,0.4)+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3200);}}
 function showYear(){$('yCta').href=TS+'&utm_content=passport_complete';$('yWa').href=WA('Hi ApniClass, I finished all 12 Nano questions. Can I try a sample paper?');$('year').hidden=false;confetti(120);}
 $('yClose').onclick=()=>$('year').hidden=true;
+function challenge(btn,label){const n=passCount();copyText(n?`I collected ${n}/12 stamps on the ApniClass Nanos 🚗×12. Each Nano is one real IGCSE exam question. Beat me: ${PUB}`:`12 Tata Nanos, 12 IGCSE exam questions. How many can you beat? ${PUB}`,btn,label);}
+$('yShare').onclick=()=>challenge($('yShare'),'Challenge a friend');
+$('passBtn').onclick=()=>{challenge($('passBtn'),$('passBtn').innerHTML);toast(passCount()?'Challenge copied with your score. Paste it in a chat.':'Link copied. Paste it in a chat.');};
 $('bQuiz').onclick=()=>{const nx=pass.indexOf(0);openCard(nx>=0?nx:0);};
 (function(){const d=Math.ceil((new Date(2027,4,1)-new Date())/864e5);if(d>0)$('cdn').textContent=d+' days to the May 2027 exams';})();
 
